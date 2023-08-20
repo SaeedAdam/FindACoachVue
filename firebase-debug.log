@@ -1,0 +1,32 @@
+[debug] [2023-08-20T22:05:00.662Z] ----------------------------------------------------------------------
+[debug] [2023-08-20T22:05:00.664Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\saeed\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2023-08-20T22:05:00.664Z] CLI Version:   12.4.8
+[debug] [2023-08-20T22:05:00.664Z] Platform:      win32
+[debug] [2023-08-20T22:05:00.664Z] Node Version:  v18.16.0
+[debug] [2023-08-20T22:05:00.665Z] Time:          Mon Aug 21 2023 01:05:00 GMT+0300 (Arabian Standard Time)
+[debug] [2023-08-20T22:05:00.665Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-08-20T22:05:00.716Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-08-20T22:05:00.717Z] > authorizing via signed-in user (sandeed70@gmail.com)
+[debug] [2023-08-20T22:05:00.717Z] [iam] checking project vue-http-demo-7a2bd for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-08-20T22:05:00.718Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/vue-http-demo-7a2bd:testIamPermissions [none]
+[debug] [2023-08-20T22:05:00.718Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/vue-http-demo-7a2bd:testIamPermissions x-goog-quota-user=projects/vue-http-demo-7a2bd
+[debug] [2023-08-20T22:05:00.719Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/vue-http-demo-7a2bd:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-08-20T22:05:01.734Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/vue-http-demo-7a2bd:testIamPermissions 200
+[debug] [2023-08-20T22:05:01.734Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/vue-http-demo-7a2bd:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-08-20T22:05:01.735Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/vue-http-demo-7a2bd [none]
+[debug] [2023-08-20T22:05:02.150Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/vue-http-demo-7a2bd 200
+[debug] [2023-08-20T22:05:02.151Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/vue-http-demo-7a2bd {"projectId":"vue-http-demo-7a2bd","projectNumber":"571633316322","displayName":"vue-http-demo","name":"projects/vue-http-demo-7a2bd","resources":{"hostingSite":"vue-http-demo-7a2bd","realtimeDatabaseInstance":"vue-http-demo-7a2bd-default-rtdb"},"state":"ACTIVE","etag":"1_409e51c5-6f37-48b1-afbd-7b49ae406714"}
+[info] 
+[info] === Deploying to 'vue-http-demo-7a2bd'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2023-08-20T22:05:02.155Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/vue-http-demo-7a2bd/versions [none]
+[debug] [2023-08-20T22:05:02.155Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/vue-http-demo-7a2bd/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2023-08-20T22:05:23.318Z] *** [apiv2] error from fetch(https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/vue-http-demo-7a2bd/versions, {"headers":{},"method":"POST","body":"{\"status\":\"CREATED\",\"labels\":{\"deployment-tool\":\"cli-firebase\"}}"}): FetchError: request to https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/vue-http-demo-7a2bd/versions failed, reason: connect ETIMEDOUT 2a00:1450:4006:804::200a:443
+[debug] [2023-08-20T22:05:28.343Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\saeed\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:254:49)
+    at listOnTimeout (node:internal/timers:569:17)
+    at process.processTimers (node:internal/timers:512:7)
+[error] 
+[error] Error: An unexpected error has occurred.
