@@ -27,87 +27,79 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: 'UserAuth',
-    data() {
-        return {
-            email: '',
-            password: '',
-            emailIsValid: true,
-            passwordIsValid: true,
-            mode: 'login',
-            isLoading: false,
-            error: null
+<script setup>
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+
+const store = useStore();
+const router = useRouter();
+
+const email = ref('');
+const password = ref('');
+const emailIsValid = ref(true);
+const passwordIsValid = ref(true);
+const mode = ref('login');
+const isLoading = ref(false);
+const error = ref(null);
+
+const submitButtonCaption = computed(() => mode.value === 'login' ? 'Login' : 'Sign Up');
+
+const switchModeButtonCaption = computed(() => mode.value === 'login' ? 'Switch to Sign Up' : 'Switch to Login');
+
+const submitForm = async () => {
+    emailIsValid.value = true;
+    passwordIsValid.value = true;
+    if (email.value === '' || !email.value.includes('@')) {
+        emailIsValid.value = false;
+    }
+    if (password.value === '' || password.value.length < 6) {
+        passwordIsValid.value = false;
+    }
+    if (!emailIsValid.value || !passwordIsValid.value) {
+        return;
+    }
+    const authData = {
+        email: email.value,
+        password: password.value
+    };
+    isLoading.value = true;
+    if (mode.value === 'login') {
+        try {
+            await store.dispatch('login', authData);
+            const redirectUrl = router.query?.redirect || '/coaches';
+            router.replace(redirectUrl);
+        } catch (error) {
+            isLoading.value = false;
+            error.value = error.message || 'Failed to login!';
         }
-    },
-    computed: {
-        submitButtonCaption() {
-            return this.mode === 'login' ? 'Login' : 'Sign Up';
-        },
-        switchModeButtonCaption() {
-            return this.mode === 'login' ? 'Switch to Sign Up' : 'Switch to Login';
-        }
-    },
-    methods: {
-        async submitForm() {
-            this.emailIsValid = true;
-            this.passwordIsValid = true;
-            if (this.email === '' || !this.email.includes('@')) {
-                this.emailIsValid = false;
-            }
-            if (this.password === '' || this.password.length < 6) {
-                this.passwordIsValid = false;
-            }
-            if (!this.emailIsValid || !this.passwordIsValid) {
-                return;
-            }
-            const authData = {
-                email: this.email,
-                password: this.password
-            };
-
-            this.isLoading = true;
-
-            if (this.mode === 'login') {
-                try {
-                    await this.$store.dispatch('login', authData);
-
-                    const redirectUrl = this.$route.query.redirect || '/coaches';
-                    this.$router.replace(redirectUrl);
-
-                } catch (error) {
-                    this.isLoading = false;
-                    this.error = error.message || 'Failed to login!';
-                }
-            } else {
-                try {
-                    await this.$store.dispatch('signup', authData);
-
-                    const redirectUrl = this.$route.query.redirect || '/coaches';
-                    this.$router.replace(redirectUrl);
-
-                } catch (error) {
-                    this.isLoading = false;
-                    this.error = error.message || 'Failed to sign up!';
-                }
-            }
-        },
-        switchAuthMode() {
-            this.mode = this.mode === 'login' ? 'signup' : 'login';
-        },
-        clearValidity(input) {
-            if (input === 'email') {
-                this.emailIsValid = true;
-            } else if (input === 'password') {
-                this.passwordIsValid = true;
-            }
-        },
-        handleError() {
-            this.error = null;
+    } else {
+        try {
+            await store.dispatch('signup', authData);
+            const redirectUrl = router.query.redirect || '/coaches';
+            router.replace(redirectUrl);
+        } catch (error) {
+            isLoading.value = false;
+            error.value = error.message || 'Failed to sign up!';
         }
     }
-}
+};
+
+const switchAuthMode = () => {
+    mode.value = mode.value === 'login' ? 'signup' : 'login';
+};
+
+const clearValidity = input => {
+    if (input === 'email') {
+        emailIsValid.value = true;
+    } else if (input === 'password') {
+        passwordIsValid.value = true;
+    }
+};
+
+const handleError = () => {
+    error.value = null;
+};
 </script>
 
 <style scoped>
