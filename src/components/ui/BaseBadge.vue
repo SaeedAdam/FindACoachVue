@@ -1,28 +1,24 @@
 <template>
-    <span class="badge" :class="type">
-        {{ text }}
-    </span>
+  <span class="badge" :class="type">
+    {{ text }}
+  </span>
 </template>
 
-<script>
-export default {
-    name: 'BaseBadge',
-    props: {
-        type: {
-            type: String,
-            required: true
-        },
-        title: {
-            type: String,
-            required: true
-        }
-    },
-    computed: {
-        text() {
-            return this.title.toUpperCase();
-        }
-    }
-}
+<script setup>
+import { computed, defineProps } from 'vue';
+
+const props = defineProps({
+  type: {
+    type: String,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+});
+
+const text = computed(() => props.title);
 </script>
 
 <style scoped>
@@ -49,5 +45,4 @@ export default {
   background-color: #8d006e;
   color: white;
 }
-
 </style>

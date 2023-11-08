@@ -46,81 +46,95 @@
     </form>
 </template>
 
-<script>
-export default {
-    name: 'CoachForm',
-    emits: ['save-form'],
-    data() {
-        return {
-            firstname: {
-                value: '',
-                isValid: true
-            },
-            lastname: {
-                value: '',
-                isValid: true
-            },
-            description: {
-                value: '',
-                isValid: true
-            },
-            areas: {
-                value: [],
-                isValid: true
-            },
-            rate: {
-                value: '',
-                isValid: true
-            },
-            formIsValid: true
-        }
-    },
-    methods: {
-        clearValidity(input) {
-            this[input].isValid = true;
-        },
-        validateForm() {
-            this.formIsValid = true;
-            if (this.firstname.value === '') {
-                this.firstname.isValid = false;
-                this.formIsValid = false;
-            }
-            if (this.lastname.value === '') {
-                this.lastname.isValid = false;
-                this.formIsValid = false;
-            }
-            if (this.description.value === '') {
-                this.description.isValid = false;
-                this.formIsValid = false;
-            }
-            if (this.areas.value.length === 0) {
-                this.areas.isValid = false;
-                this.formIsValid = false;
-            }
-            if (!this.rate.value || this.rate.value <= 0) {
-                this.rate.isValid = false;
-                this.formIsValid = false;
-            }
-        },
-        submitForm() {
-            this.validateForm();
-            if (!this.formIsValid) {
-                console.log('Invalid form');
-                return;
-            }
+<script setup>
+import { ref, defineEmits } from 'vue';
 
-            const formData = {
-                firstname: this.firstname.value,
-                lastname: this.lastname.value,
-                description: this.description.value,
-                areas: this.areas.value,
-                rate: this.rate.value
-            };
+const emit = defineEmits(['save-form']);
 
-            this.$emit('save-form', formData);
-        }
+const firstname = ref({
+    value: '',
+    isValid: true
+});
+const lastname = ref({
+    value: '',
+    isValid: true
+});
+const description = ref({
+    value: '',
+    isValid: true
+});
+const areas = ref({
+    value: [],
+    isValid: true
+});
+const rate = ref({
+    value: '',
+    isValid: true
+});
+const formIsValid = ref(true);
+
+const clearValidity = input => {
+    switch (input) {
+        case 'firstname':
+            firstname.value.isValid = true;
+            break;
+        case 'lastname':
+            lastname.value.isValid = true;
+            break;
+        case 'description':
+            description.value.isValid = true;
+            break;
+        case 'areas':
+            areas.value.isValid = true;
+            break;
+        case 'rate':
+            rate.value.isValid = true;
+            break;
     }
-}
+};
+
+const validateForm = () => {
+    formIsValid.value = true;
+    if (firstname.value === '') {
+        firstname.value.isValid = false;
+        formIsValid.value = false;
+    }
+    if (lastname.value === '') {
+        lastname.value.isValid = false;
+        formIsValid.value = false;
+    }
+    if (description.value === '') {
+        description.value.isValid = false;
+        formIsValid.value = false;
+    }
+    if (areas.value.length === 0) {
+        areas.value.isValid = false;
+        formIsValid.value = false;
+    }
+    if (!rate.value || rate.value <= 0) {
+        rate.value.isValid = false;
+        formIsValid.value = false;
+    }
+};
+
+const submitForm = () => {
+    validateForm();
+    if (!formIsValid.value) {
+        console.log('Invalid form');
+        return;
+    }
+
+    const formData = {
+        firstname: firstname.value,
+        lastname: lastname.value,
+        description: description.value,
+        areas: areas.value,
+        rate: rate.value
+    };
+
+    emit('save-form', formData);
+};
+
 </script>
 
 <style scoped>

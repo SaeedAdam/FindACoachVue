@@ -14,47 +14,45 @@
 </template>
 
 
-<script>
-export default {
-    name: 'CoachItem',
-    props: {
-        id: {
-            type: String,
-            required: true
-        },
-        firstName: {
-            type: String,
-            required: true
-        },
-        lastName: {
-            type: String,
-            required: true
-        },
-        areas: {
-            type: Array,
-            required: true
-        },
-        description: {
-            type: String,
-            required: true
-        },
-        rate: {
-            type: Number,
-            required: true
-        }
+<script setup>
+import { computed, defineProps } from 'vue';
+import { useRoute } from 'vue-router';
+
+const props = defineProps({
+    id: {
+        type: Object,
+        required: true
     },
-    computed: {
-        fullName() {
-            return `${this.firstName} ${this.lastName}`
-        },
-        coachContactLink() {
-            return `${this.$route.path}/${this.id}/contact` // /coaches/c1/contact
-        },
-        coachDetailsLink() {
-            return `${this.$route.path}/${this.id}` // /coaches/c1
-        }
+    firstName: {
+        type: Object,
+        required: true
+    },
+    lastName: {
+        type: Object,
+        required: true
+    },
+    areas: {
+        type: Array,
+        required: true
+    },
+    description: {
+        type: Object,
+        required: true
+    },
+    rate: {
+        type: Object,
+        required: true
     }
-}
+});
+
+const router = useRoute();
+
+const fullName = computed(() => `${props.firstName.value} ${props.lastName.value}`);
+
+const coachContactLink = computed(() => `${router.path}/${props.id.value}/contact`); // /coaches/c1/contact
+
+const coachDetailsLink = computed(() => `${router.path}/${props.id.value}`); // /coaches/c1
+
 </script>
 
 <style scoped>

@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
 
 import CoachItem from '../../components/coaches/CoachItem.vue';
@@ -44,21 +44,35 @@ const error = ref(null);
 
 const store = useStore();
 
+const loadCoaches = async (refresh = false) => {
+    isLoading.value = true;
+    try {
+        await store.dispatch('coaches/loadCoaches', { forceRefresh: refresh });
+    } catch (error) {
+        error.value = error.message || 'Something went wrong!';
+    }
+    isLoading.value = false;
+};
+
+onBeforeMount(() => {
+    loadCoaches();
+});
+
 const filteredCoaches = computed(() => {
     const coaches = store.getters['coaches/coaches'];
-    const filteredCoaches = coaches.filter(coach => {
-        if (activeFilters.value.frontend && coach.areas.includes('frontend')) {
-            return true;
+    
+    return coaches.filter(coach => {
+        if (!activeFilters.value.frontend && coach.areas.includes('frontend')) {
+            return false;
         }
-        if (activeFilters.value.backend && coach.areas.includes('backend')) {
-            return true;
+        if (!activeFilters.value.backend && coach.areas.includes('backend')) {
+            return false;
         }
-        if (activeFilters.value.career && coach.areas.includes('career')) {
-            return true;
+        if (!activeFilters.value.career && coach.areas.includes('career')) {
+            return false;
         }
-        return false;
+        return true;
     });
-    return filteredCoaches;
 });
 
 const hasCoaches = computed(() => !isLoading.value && store.getters['coaches/hasCoaches']);
@@ -71,21 +85,12 @@ const setFilters = updatedFilters => {
     activeFilters.value = updatedFilters;
 };
 
-const loadCoaches = async (refresh = false) => {
-    isLoading.value = true;
-    try {
-        await store.dispatch('coaches/loadCoaches', { forceRefresh: refresh });
-    } catch (error) {
-        error.value = error.message || 'Something went wrong!';
-    }
-    isLoading.value = false;
-};
+
 
 const handleError = () => {
     error.value = null;
 };
 
-loadCoaches();
 </script>
 
 <style scoped>
