@@ -15,36 +15,35 @@
     </form>
 </template>
 
-<script>
-export default {
-    name: 'ContactCoach',
-    data() {
-        return {
-            email: '',
-            message: '',
-            formIsValid: true
-        }
-    },
-    methods: {
-        sendMessage() {
-            this.formIsValid = true;
-            if (this.email === '' || !this.email.includes('@') || this.message === '') {
-                this.formIsValid = false;
-            }
-            if (!this.formIsValid) {
-                return;
-            }
+<script setup>
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
-            this.$store.dispatch('requests/contactCoach', {
-                coachId: this.$route.params.id,
-                email: this.email,
-                message: this.message
-            });
+const store = useStore();
+const router = useRouter();
 
-            this.$router.replace('/coaches');
-        }
+const email = ref('');
+const message = ref('');
+const formIsValid = ref(true);
+
+const sendMessage = () => {
+    formIsValid.value = true;
+    if (email.value === '' || !email.value.includes('@') || message.value === '') {
+        formIsValid.value = false;
     }
-}
+    if (!formIsValid.value) {
+        return;
+    }
+
+    store.dispatch('requests/contactCoach', {
+        coachId: router.params.id,
+        email: email.value,
+        message: message.value
+    });
+
+    router.replace('/coaches');
+};
 </script>
 
 <style scoped>
