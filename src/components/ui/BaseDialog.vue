@@ -3,50 +3,50 @@
     <div v-if="show" @click="tryClose" class="backdrop"></div>
     <transition name="dialog">
       <dialog open v-if="show">
-      <header>
-        <slot name="header">
-          <h2>{{ title }}</h2>
-        </slot>
-      </header>
-      <section>
-        <slot></slot>
-      </section>
-      <menu v-if="!fixed">
-        <slot name="actions">
-          <base-button @click="tryClose">Close</base-button>
-        </slot>
-      </menu>
-    </dialog>
+        <header>
+          <slot name="header">
+            <h2>{{ title }}</h2>
+          </slot>
+        </header>
+        <section>
+          <slot></slot>
+        </section>
+        <menu v-if="!fixed">
+          <slot name="actions">
+            <base-button @click="tryClose">Close</base-button>
+          </slot>
+        </menu>
+      </dialog>
     </transition>
   </teleport>
 </template>
 
-<script>
-export default {
-  props: {
-    show: {
-      type: Boolean,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: false,
-    },
-    fixed: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
+<script setup>
+import { defineProps, defineEmits } from 'vue';
+
+const emit = defineEmits(['close']);
+
+const props = defineProps({
+  show: {
+    type: Boolean,
+    required: true,
   },
-  emits: ['close'],
-  methods: {
-    tryClose() {
-      if (this.fixed) {
-        return;
-      }
-      this.$emit('close');
-    },
+  title: {
+    type: String,
+    required: false,
   },
+  fixed: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+});
+
+const tryClose = () => {
+  if (props.fixed) {
+    return;
+  }
+  emit('close');
 };
 </script>
 
@@ -101,7 +101,7 @@ menu {
 .dialog-enter-from,
 .dialog-leave-to {
   opacity: 0;
- transform: translateY(-30px);
+  transform: translateY(-30px);
 }
 
 .dialog-enter-active,

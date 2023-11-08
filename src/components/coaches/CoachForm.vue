@@ -125,11 +125,11 @@ const submitForm = () => {
     }
 
     const formData = {
-        firstname: firstname.value,
-        lastname: lastname.value,
-        description: description.value,
-        areas: areas.value,
-        rate: rate.value
+        firstname: firstname.value.value,
+        lastname: lastname.value.value,
+        description: description.value.value,
+        areas: areas.value.value,
+        rate: rate.value.value
     };
 
     emit('save-form', formData);

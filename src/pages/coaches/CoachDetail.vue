@@ -2,8 +2,13 @@
     <div>
         <section>
             <base-card>
-                <h2>{{ fullName }}</h2>
-                <h3>${{ rate }}/hour</h3>
+                <div v-if="selectedCoach">
+                    <h2>{{ fullName }}</h2>
+                    <h3>${{ rate }}/hour</h3>
+                </div>
+                <div v-else>
+                    <base-spinner></base-spinner>
+                </div>
             </base-card>
         </section>
         <section>
@@ -17,37 +22,60 @@
         </section>
         <section>
             <base-card>
-                <base-badge v-for="area in areas" :key="area" :title="area" :type="area">
-                </base-badge>
-                <p>{{ description }}</p>
+                <div v-if="selectedCoach">
+                    <base-badge v-for="area in areas" :key="area" :title="area" :type="area">
+                    </base-badge>
+                    <p>{{ description }}</p>
+                </div>
+                <div v-else>
+                    <base-spinner></base-spinner>
+                </div>
             </base-card>
         </section>
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, defineProps, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 
+const props = defineProps({
+    id: {
+        type: String,
+        required: true
+    }
+});
+
 const store = useStore();
-const route = useRoute();
+const router = useRoute();
 
-const id = route.params.id;
-const selcetedCoach = ref(null);
+const selectedCoach = ref('');
 
-selcetedCoach.value = store.getters['coaches/coaches'].find(
-    coach => coach.id === id
-);
+const loadCoach = async (refresh = false) => {
+    const coachId = props.id;
+    const coaches = store.getters['coaches/coaches'];
+    let coach = coaches.find(coach => coach.id === coachId);
+    if (!coach) {
+        await store.dispatch('coaches/loadCoaches', { forceRefresh: refresh });
+        coach = store.getters['coaches/coaches'].find(coach => coach.id === coachId);
+    }
+    selectedCoach.value = coach;
+};
 
-const fullName = computed(() => `${selcetedCoach.value.firstName} ${selcetedCoach.value.lastName}`);
+onBeforeMount(() => {
+    loadCoach();
+});
 
-const areas = computed(() => selcetedCoach.value.areas);
+const fullName = computed(() => selectedCoach.value ? `${selectedCoach.value.firstName} ${selectedCoach.value.lastName}` : '');
 
-const description = computed(() => selcetedCoach.value.description);
+const areas = computed(() => selectedCoach.value ? selectedCoach.value.areas : '');
 
-const rate = computed(() => selcetedCoach.value.rate);
+const description = computed(() => selectedCoach.value ? selectedCoach.value.description : '');
 
-const contactLink = computed(() => `${route.path}/contact`);
+const rate = computed(() => selectedCoach.value ? selectedCoach.value.rate : '');
+
+const contactLink = computed(() => `${router.path}/contact`);
 
 </script>
+

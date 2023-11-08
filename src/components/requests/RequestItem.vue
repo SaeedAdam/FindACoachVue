@@ -7,48 +7,44 @@
     </li>
 </template>
 
-<script>
-export default{
-    name: 'RequestItem',
-    props: {
-        id: {
-            type: String,
-            required: false
-        },
-        coachId: {
-            type: String,
-            required: false
-        },
-        email: {
-            type: String,
-            required: true
-        },
-        message: {
-            type: String,
-            required: true
-        }
+<script setup>
+import { computed, defineProps } from 'vue';
+
+const props = defineProps({
+    id: {
+        type: String,
+        required: false
     },
-    computed: {
-        coachLink() {
-            return `/coaches/${this.coachId}`;
-        },
-        emailLink() {
-            return `mailto:${this.email}`;
-        }
+    coachId: {
+        type: String,
+        required: false
     },
-    methods: {
-        acceptRequest() {
-            this.$store.dispatch('requests/acceptRequest', {
-                requestId: this.id
-            });
-        },
-        declineRequest() {
-            this.$store.dispatch('requests/declineRequest', {
-                requestId: this.id
-            });
-        }
+    email: {
+        type: String,
+        required: true
+    },
+    message: {
+        type: String,
+        required: true
     }
-}
+});
+
+const messageSubject = 'Your coach has responded to your request!';
+const messageBody = `
+Hi ${props.email},
+
+Thank you for your request! I will get back to you as soon as possible.
+
+Best regards,
+${props.coachId}
+`
+
+const email = computed(() => props.email);
+
+const message = computed(() => props.message);
+
+const emailLink = computed(() => `mailto:${props.email}?subject=${messageSubject}&body=${messageBody}`);
+
 </script>
 
 <style scoped>

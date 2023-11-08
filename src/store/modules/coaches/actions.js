@@ -26,7 +26,7 @@ export default {
             ...coachData,
             id: userId
         });
-    }, 
+    },
     async loadCoaches(context, payload) {
         if (!payload.forceRefresh && !context.getters.shouldUpdate) {
             return;

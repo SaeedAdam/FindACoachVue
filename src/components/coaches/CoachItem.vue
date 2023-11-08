@@ -20,15 +20,15 @@ import { useRoute } from 'vue-router';
 
 const props = defineProps({
     id: {
-        type: Object,
+        type: String,
         required: true
     },
     firstName: {
-        type: Object,
+        type: String,
         required: true
     },
     lastName: {
-        type: Object,
+        type: String,
         required: true
     },
     areas: {
@@ -36,26 +36,26 @@ const props = defineProps({
         required: true
     },
     description: {
-        type: Object,
+        type: String,
         required: true
     },
     rate: {
-        type: Object,
+        type: Number,
         required: true
     }
 });
 
 const router = useRoute();
 
-const fullName = computed(() => `${props.firstName.value} ${props.lastName.value}`);
+const fullName = computed(() => `${props.firstName} ${props.lastName}`);
 
-const areas = computed(() => props.areas.value);
+const areas = computed(() => props.areas);
 
-const rate = computed(() => props.rate.value);
+const rate = computed(() => props.rate);
 
-const coachContactLink = computed(() => `${router.path}/${props.id.value}/contact`); // /coaches/c1/contact
+const coachContactLink = computed(() => `${router.path}/${props.id}/contact`); // /coaches/c1/contact
 
-const coachDetailsLink = computed(() => `${router.path}/${props.id.value}`); // /coaches/c1
+const coachDetailsLink = computed(() => `${router.path}/${props.id}`); // /coaches/c1
 
 </script>
 
