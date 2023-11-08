@@ -49,6 +49,10 @@ const router = useRoute();
 
 const fullName = computed(() => `${props.firstName.value} ${props.lastName.value}`);
 
+const areas = computed(() => props.areas.value);
+
+const rate = computed(() => props.rate.value);
+
 const coachContactLink = computed(() => `${router.path}/${props.id.value}/contact`); // /coaches/c1/contact
 
 const coachDetailsLink = computed(() => `${router.path}/${props.id.value}`); // /coaches/c1
