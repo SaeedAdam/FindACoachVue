@@ -7,21 +7,18 @@
     </section>
 </template>
 
-<script>
+<script setup>
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import CoachForm from '../../components/coaches/CoachForm.vue';
-export default {
-    components: {
-        CoachForm
-    },
-    computed: {
-    },
-    methods: {
-        saveData(formData) {
-            this.$store.dispatch('coaches/registerCoach', formData);
-            this.$router.replace('/coaches');
-        }
-    },
-}
+
+const store = useStore();
+const router = useRouter();
+
+const saveData = formData => {
+    store.dispatch('coaches/registerCoach', formData);
+    router.replace('/coaches');
+};
 </script>
 
 <style scoped></style>

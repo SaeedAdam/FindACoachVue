@@ -7,29 +7,25 @@
     </router-view>
 </template>
 
-<script>
+<script setup>
+import { computed, watch } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+
 import TheHeader from './components/layout/TheHeader.vue';
 
-export default {
-    components: {
-        TheHeader
-    },
-    created() {
-        this.$store.dispatch('tryLogin');
-    },
-    computed: {
-        didAutoLogout() {
-            return this.$store.getters['didAutoLogout'];
-        }
-    },
-    watch: {
-        didAutoLogout(isLoggedOut) {
-            if (isLoggedOut) {
-                this.$router.replace('/auth');
-            }
-        }
+const store = useStore();
+const router = useRouter();
+
+const didAutoLogout = computed(() => store.getters['didAutoLogout']);
+
+watch(didAutoLogout, isLoggedOut => {
+    if (isLoggedOut) {
+        router.replace('/auth');
     }
-}
+});
+
+store.dispatch('tryLogin');
 </script>
 
 <style>

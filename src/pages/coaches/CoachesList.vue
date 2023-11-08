@@ -27,72 +27,65 @@
     </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+
 import CoachItem from '../../components/coaches/CoachItem.vue';
 import CoachFilter from '../../components/coaches/CoachFilter.vue';
 
-export default {
-    components: { CoachItem, CoachFilter },
-    name: 'CoachesList',
-    data() {
-        return {
-            activeFilters: {
-                frontend: true,
-                backend: true,
-                career: true
-            },
-            isLoading: false,
-            error: null
+const activeFilters = ref({
+    frontend: true,
+    backend: true,
+    career: true
+});
+const isLoading = ref(false);
+const error = ref(null);
+
+const store = useStore();
+
+const filteredCoaches = computed(() => {
+    const coaches = store.getters['coaches/coaches'];
+    const filteredCoaches = coaches.filter(coach => {
+        if (activeFilters.value.frontend && coach.areas.includes('frontend')) {
+            return true;
         }
-    },
-    computed: {
-        filteredCoaches() {
-            const coaches = this.$store.getters['coaches/coaches'];
-            const filteredCoaches = coaches.filter(coach => {
-                if (this.activeFilters.frontend && coach.areas.includes('frontend')) {
-                    return true;
-                }
-                if (this.activeFilters.backend && coach.areas.includes('backend')) {
-                    return true;
-                }
-                if (this.activeFilters.career && coach.areas.includes('career')) {
-                    return true;
-                }
-                return false;
-            });
-            return filteredCoaches;
-        },
-        hasCoaches() {
-            return !this.isLoading && this.$store.getters['coaches/hasCoaches'];
-        },
-        isCoach() {
-            return this.$store.getters['coaches/isCoach'];
-        },
-        isLoggedIn() {
-            return this.$store.getters['isAuthenticated'];
+        if (activeFilters.value.backend && coach.areas.includes('backend')) {
+            return true;
         }
-    },
-    methods: {
-        setFilters(updatedFilters) {
-            this.activeFilters = updatedFilters;
-        },
-        async loadCoaches(refresh = false) {
-            this.isLoading = true;
-            try {
-                await this.$store.dispatch('coaches/loadCoaches', { forceRefresh: refresh });
-            } catch (error) {
-                this.error = error.message || 'Something went wrong!';
-            }
-            this.isLoading = false;
-        },
-        handleError() {
-            this.error = null
+        if (activeFilters.value.career && coach.areas.includes('career')) {
+            return true;
         }
-    },
-    created() {
-        this.loadCoaches();
+        return false;
+    });
+    return filteredCoaches;
+});
+
+const hasCoaches = computed(() => !isLoading.value && store.getters['coaches/hasCoaches']);
+
+const isCoach = computed(() => store.getters['coaches/isCoach']);
+
+const isLoggedIn = computed(() => store.getters['isAuthenticated']);
+
+const setFilters = updatedFilters => {
+    activeFilters.value = updatedFilters;
+};
+
+const loadCoaches = async (refresh = false) => {
+    isLoading.value = true;
+    try {
+        await store.dispatch('coaches/loadCoaches', { forceRefresh: refresh });
+    } catch (error) {
+        error.value = error.message || 'Something went wrong!';
     }
-}
+    isLoading.value = false;
+};
+
+const handleError = () => {
+    error.value = null;
+};
+
+loadCoaches();
 </script>
 
 <style scoped>
