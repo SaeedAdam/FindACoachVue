@@ -35,9 +35,9 @@ const sendMessage = () => {
     if (!formIsValid.value) {
         return;
     }
-
+    
     store.dispatch('requests/contactCoach', {
-        coachId: router.params.id,
+        coachId: router.currentRoute.value.params.id,
         email: email.value,
         message: message.value
     });
