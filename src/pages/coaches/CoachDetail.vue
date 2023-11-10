@@ -75,7 +75,16 @@ const description = computed(() => selectedCoach.value ? selectedCoach.value.des
 
 const rate = computed(() => selectedCoach.value ? selectedCoach.value.rate : '');
 
-const contactLink = computed(() => `${router.path}/contact`);
+const contactLink = computed(() => {
+    const currentRoute = router.path;
+
+    // Check if the current path already contains "/contact"
+    if (currentRoute.includes('/contact')) {
+        return currentRoute;
+    } else {
+        return `${currentRoute}/contact`;
+    }
+});
 
 </script>
 
